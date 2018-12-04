@@ -1,0 +1,23 @@
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Лист заявок</a></li>
+  <li class="breadcrumb-item"><a href="/orders/add">Добавить новую заявку</a></li>
+  <li class="breadcrumb-item"><a href="/bushList">Список кустов пользователя</a></li>
+  <li class="breadcrumb-item active">{{title}}</li>
+</ul>
+<div class="col-sm-4">
+    <form method='POST' action='/bushList/save'>
+        <div class="form-inline form-inline-custom">
+            <label for="bush">Куст:</label>
+            <input type="text" class="form-control" name="bush" placeholder="например: 646" required>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="oilfield">Месторождение:</label>
+            <input type="text" class="form-control" name="oilfield" placeholder="например: Восточно-Сургутское" required>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="rig_num">Зав.№ БУ:</label>
+            <input type="number" class="form-control" name="rig_num" placeholder="например: 12345 (только БУ)">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+    </form>
+</div>

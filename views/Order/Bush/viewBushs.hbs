@@ -1,0 +1,42 @@
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Лист заявок</a></li>
+  <li class="breadcrumb-item"><a href="/orders/add">Добавить новую заявку</a></li>
+  <li class="breadcrumb-item active">{{title}}</li>
+</ul> 
+{{#if alert}}
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Успешно!</strong> {{alert}}
+</div>
+{{/if}}
+<ul class="nav">
+    <li class="nav-item">
+        <a class="nav-link" href="/bushList/add">Добавить куст</a>
+    </li>
+</ul>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>_id</th>
+            <th>Куст</th>
+            <th>Месторождение</th>
+            <th>Зав.№ БУ</th>
+            <th>Тип БУ</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each userBushs}}
+        <tr>
+            <td>{{bush_id}}</td>
+            <td>{{userBush}}</td>
+            <td>{{userOilField}}</td>
+            <td>{{userRigNum}}</td>
+            <td>{{userRigType}}</td>
+            <td>
+                <a href="/bushList/delete?bushId={{bush_id}}">Удалить</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

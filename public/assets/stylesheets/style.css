@@ -1,0 +1,391 @@
+/* body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+} */
+
+html, body {
+  height: 100%;
+}
+
+.container-fluid {
+  display: flex;
+}
+
+.container-fluid {
+  min-height: 100%;
+}
+
+table, aside .form-control {
+  font-size: 13px;
+}
+
+aside, .row {
+  /* background-color: #267871; */
+  /* background-color: #516395; */
+  /* background-color: #32404e; */
+  background-color: #384858;
+  width: 100%;
+}
+
+aside > form > div {
+  padding: 0.5rem 0.75rem;
+}
+
+form > div {
+  margin-bottom: 2rem;
+}
+
+aside .btn-group {
+  width: 100%;
+  margin-top: 0.5rem;
+  /* margin-bottom: 2rem; */
+}
+
+aside .btn-group > .btn {
+  width: 50%;
+  font-size: 1rem;
+}
+
+aside > h1 {
+  padding: 1.3rem;
+}
+
+aside > div {
+  /* padding: 1rem 0.75rem; */
+  margin-top: 1.3rem;
+}
+
+aside .card {
+  background-color: inherit;
+  margin-top: 0.6rem;
+}
+aside .card a {
+  color: white;
+  font-size: 0.9rem;
+}
+
+.card-header {
+  background-color: rgba(255,255,255,.2);
+}
+
+aside .card-body {
+  background-color: white;
+}
+
+.navbar-brand {
+  margin: 0.6rem 0;
+  color: white;
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 0rem;
+  font-size: 1.8rem;
+  padding-bottom: 1.3rem;
+}
+a.navbar-brand:hover {
+  color: white;
+}
+
+.btn-outline-light.custom:hover {
+  color: #212529;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.form-inline-custom {
+  margin-bottom: 1.3rem;
+}
+
+div.form-inline-custom > .form-control {
+  width: 70%;
+  margin-left: auto;
+}
+
+/* .btn-outline-light.submit:hover {
+  color: black;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+.btn-outline-light.reset:hover {
+  color: white;
+  background-color: #dc3545;
+  border-color: white;
+} */
+
+button.btn.submit {
+  margin-left: 15px !important;
+}
+
+ul.nav {
+  width: 100%;
+  margin-top: 0.8rem;
+}
+
+p.nav-link {
+  margin: 0;
+}
+
+header .col-xl-10 {
+  display: flex;
+}
+
+.nav-title {
+  font-size: 20px;
+  align-self: center;
+  /* color: #267871; */
+  color: #384858;
+}
+
+.login-btn {
+  align-self: center;
+  padding-right: 1rem;
+}
+.login-btn > a {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.form-inline .form-control {
+  width: 50%;
+}
+
+.find-form form {
+  width: 100%;
+}
+.find-form form input.form-control {
+  flex-grow: 1;
+  padding: 0.52rem 0.52rem;
+}
+
+th > .btn, aside > h1 {
+  font-size: 13px;
+  font-weight: bold;
+  text-align: left;
+  padding-left: 0;
+  border-color: transparent;
+}
+
+.col-xl-10 {
+  background-color: white;
+}
+
+@font-face {
+  font-family: 'ethnocentricregular';
+  src: url('../fonts/ethnocentric_rg-webfont.woff') format('woff2'),
+       url('../fonts/ethnocentric_rg-webfont.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'PancettaPro';
+  src: url("../fonts/PancettaPro-Regular-webfont.eot");
+  src: url("../fonts/PancettaPro-Regular-webfont.eot?#iefix") format("embeddedopentype"), 
+        url("../fonts/PancettaPro-Regular-webfont.woff2") format("woff2"), 
+        url("../fonts/PancettaPro-Regular-webfont.woff") format("woff"), 
+        url("../fonts/PancettaPro-Regular-webfont.ttf") format("truetype"), 
+        url("../fonts/PancettaPro-Regular-webfont.svg") format("svg"); }
+
+.navbar-brand {
+  font-family: 'ethnocentricregular';
+  font-size: 1.8rem;
+  padding:0;
+  margin: 0.8rem 0;
+  margin-bottom: 2.1rem;
+}
+
+.breadcrumb {
+  font-size: 1rem;
+  margin-top: -2.7rem !important;
+  margin-bottom: 1.4rem;
+}
+a.breadcrumb-item {
+  color: #6c757d;
+}
+
+.nav-menu-custom {
+  margin-bottom: 1rem;
+}
+
+.media-body {
+  background-color: aliceblue;
+  padding: 0.5rem 1rem;
+}
+
+.dashboard {
+  margin-left: 2rem;
+}
+
+.top-panel {
+  flex-grow: 1;
+  flex-basis: 25%;
+  height: 6rem;
+  background-color: rgba(31, 120, 180, 0.9);
+  background-clip: padding-box;
+  color: white;
+  text-align: center;
+  border-right: 1px white solid;
+  transition: all 0.2s;
+}
+
+.top-panel:hover {
+  background-color: rgba(31, 120, 180, 0.8);
+  cursor: pointer;
+}
+
+.top-panel-header {
+  font-size: 1.1rem;
+  margin-bottom: 0;
+  padding-top: 8px;
+  font-family: PancettaPro;
+}
+
+.top-panel-number {
+  font-family: 'PancettaPro';
+  margin-top: -8px;
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+
+.dashboard-panel-barchart {
+  height: 380px;
+  margin-top: 20px;
+  background-color: rgb(233, 236, 239);
+}
+
+.dashboard-panel-piechart-status {
+  height: 330px;
+  margin-top: 20px;
+  background-color: rgb(233, 236, 239);
+}
+
+.dashboard-panel-piechart-daysOn {
+  height: 330px;
+  margin-top: 20px;
+  background-color: rgb(233, 236, 239);
+}
+
+.dashboard-panel-piechart-curator {
+  height: 330px;
+  margin-top: 20px;
+  background-color: rgb(233, 236, 239);
+}
+
+.status-panel {
+  flex-grow: 1;
+  background-clip: padding-box;
+  color: #6c757d;
+  text-align: center;
+  border-right: 1px white solid;
+  transition: all 0.2s;
+}
+
+.status-panel:hover {
+  background-color: rgb(222, 227, 231);
+  cursor: pointer;
+}
+
+.status-panel-chart {
+  height: 100%;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.axis text {
+  font-size: 0.8rem;
+  /* font: 10px sans-serif; */
+}
+.line{
+  fill: none;    
+  stroke-width: 2;
+}
+.axis .tick line {
+opacity: .2;
+}
+
+.axis.y {
+  display: none;
+}
+
+rect.bar {
+  fill: rgb(166, 206, 227);
+  opacity: 1;
+  transition: all 0.25s;
+}
+
+rect.bar:hover {
+  fill: rgba(31, 120, 180, 0.9);
+  cursor: pointer;
+}
+
+text.text {
+  font-size:1.3rem;
+}
+
+.axis.x .domain {
+  stroke: #6c757d;
+}
+
+.axis.x text {
+  font-size: 0.9rem;
+  fill: #6c757d;
+}
+
+.pieLabel {
+  fill: rgba(31, 120, 180, 0.9);
+  font-size: 3rem;
+  font-family: 'PancettaPro';
+}
+.days .pieLabel {
+  fill: rgb(255, 127, 14);
+}
+
+.curator .pieLabel {
+  fill: rgb(148, 103, 189);
+}
+
+.table-hover tbody tr:hover {
+  cursor: pointer;
+}
+
+/* .status-table-header {
+  font-weight: bold;
+} */
+
+.status-td {
+  background-color:rgba(166, 206, 227, 0.5);
+}
+
+text {
+  font-family: PancettaPro;
+  font-size: 1.1rem;
+}
+
+.btn-outline-info {
+  color: #17a2b8 !important;
+}
+
+.btn-outline-info:hover {
+  color: #fff !important;
+}
+
+.btn-outline-secondary {
+  color: #6c757d !important;
+}
+
+.btn-outline-secondary:hover {
+  color: #fff !important;
+}
+
+ul.breadcrumb li:first-child {
+  margin-left: 1rem;
+}

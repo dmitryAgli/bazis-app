@@ -1,0 +1,304 @@
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Лист заявок</a></li>
+  <li class="breadcrumb-item active">{{title}}</li>
+</ul>
+{{#if alert}}
+<div>
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Успешно!</strong> {{alert}}
+</div>
+{{/if}}
+  <div id="table">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                {{#if orderlist.0.date}}
+                <th><span class="btn text-dark btn-block disabled">Дата</span></th>
+                {{/if}}
+                {{#if orderlist.0.user}}
+                <th><span class="btn text-dark btn-block disabled">Бригада</span></th>
+                {{/if}}
+                {{#if orderlist.0.userOrgUnity}}
+                <th><span class="btn text-dark btn-block disabled">Орг единица</span></th>
+                {{/if}}
+                {{#if orderlist.0.bush}}
+                <th><span class="btn text-dark btn-block disabled">Куст</span></th>
+                {{/if}}
+                {{#if orderlist.0.oilfield}}
+                <th><span class="btn text-dark btn-block disabled">Месторождение</span></th>
+                {{/if}}
+                {{#if orderlist.0.orderRequest}}
+                <th><span class="btn text-dark btn-block disabled">Заявка</span></th>
+                {{/if}}
+                {{#if orderlist.0.orderQuantity}}
+                <th><span class="btn text-dark btn-block disabled">Кол-во</span></th>
+                {{/if}}
+                {{#if orderlist.0.orderUnit}}
+                <th><span class="btn text-dark btn-block disabled">Ед.изм</span></th>
+                {{/if}}
+                {{#if orderlist.0.curator}}
+                <th><span class="btn text-dark btn-block disabled">Куратор</span></th>
+                {{/if}}
+                {{#if orderlist.0.orderStatus}}
+                <th><span class="btn text-dark btn-block disabled">Статус</span></th>
+                {{/if}}
+                <th class="status-td">
+                    <span class="btn text-dark btn-block">
+                        
+                        {{#if_eq userRole "Manager"}}
+                            <select class="status-table-header" name="status" id="asign_status" title="Присвоить статус всем заявкам">
+                                <option value=" ">Статус не присвоен</option>
+                                <option value="В обработке">В обработке</option>
+                                <option value="Задание выдано">Задание выдано</option>
+                            </select>
+                        {{/if_eq}}
+
+                        {{#if_eq userRole "Shop"}}
+                            <select class="status-table-header" name="status" id="asign_status" title="Присвоить статус всем заявкам">
+                                <option value=" ">Статус не присвоен</option>
+                                <option value="Отправлено">Отправлено</option>
+                            </select>
+                        {{/if_eq}}
+
+                        {{#if_eq userDescription orderlist.0.user}}
+                            <select class="status-table-header" name="status" id="asign_status" title="Присвоить статус всем заявкам">
+                                <option value=" ">Статус не присвоен</option>
+                                <option value="Выполнено">Выполнено</option>
+                            </select>
+                        {{/if_eq}}
+
+                    </span></th>
+                {{#if orderlist.0.shop}}
+                <th><span class="btn text-dark btn-block disabled">Цех / Участок</span></th>
+                {{/if}}
+                <th><span class="btn text-dark btn-block disabled">
+                        <select class="shop-table-header" name="shop" id="asign_shop" disabled="true">
+                            <option value="">Назначить исполнителя</option>
+                            <option value="ПРЦБО">ПРЦБО</option>
+                            <option value="ПРЦЭиЭ">ПРЦЭиЭ</option>
+                            <option value="ИП">Инстр.площадка</option>
+                            <option value="ЦПВС">ЦПВС</option>
+                            <option value="РСУ">Рем.строй уч-к</option>
+                            <option value="КИП">Уч-к КИПиА</option>
+                            <option value="СБПО">Начальник СБПО</option>
+                            <option value="РБПО">Начальник РБПО</option>
+                        </select>
+                </span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each orderlist}}
+            <tr>
+                {{#if date}}
+                <td>{{date}}</td>
+                {{/if}}
+                {{#if user}}
+                <td>{{user}}</td>
+                {{/if}}
+                {{#if userOrgUnity}}
+                <td>{{userOrgUnity}}</td>
+                {{/if}}
+                {{#if bush}}
+                <td>{{bush}}</td>
+                {{/if}}
+                {{#if oilfield}}
+                <td>{{oilfield}}</td>
+                {{/if}}
+                {{#if orderRequest}}
+                <td>{{orderRequest}}</td>
+                {{/if}}
+                {{#if orderQuantity}}
+                <td>{{orderQuantity}}</td>
+                {{/if}}
+                {{#if orderUnit}}
+                <td>{{orderUnit}}</td>
+                {{/if}}
+                {{#if curator}}
+                <td class="curator">{{curator}}</td>
+                {{/if}}
+                {{#if orderStatus}}
+                <td>{{orderStatus}}</td>
+                {{/if}}
+                <td class="status-td">
+                    <select class="status-table-header cell-status" name="status" data-status-id={{_id}} title="Присвоить статус"></select>
+                </td>
+                {{#if shop}}
+                <td class="shop">{{shop}}</td>
+                {{/if}}
+                <td class="shop-td">
+                    <select id="{{_id}}" class="shop-table-header cell-shop" name="shop" data-shop-id={{_id}} title="Назначить исполнителя" disabled='true'></select>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+    window.addEventListener('load', function() {
+
+        //Add option for STATUS cells
+        status_header_el = document.getElementById('asign_status');
+        status_cells = document.querySelectorAll('.cell-status');
+        status_cells.forEach(el=> {
+            el.innerHTML = status_header_el.innerHTML
+        })
+
+        //Add option for SHOP cells
+        shop_header_el = document.getElementById('asign_shop');
+        shop_cells = document.querySelectorAll('.cell-shop');
+        shop_cells.forEach(el=> {
+            el.innerHTML = shop_header_el.innerHTML
+        })
+
+
+        //Change Status
+        status_header_el.addEventListener('change', function() {
+            for (opt of status_header_el) {
+                if (opt.selected) {
+
+                    status_cells.forEach(el=> {
+                        for (let i=0; i < el.length; i++) {
+                            if(el.options[i].value === opt.value) el.options[i].selected = true;
+                        }
+                    })
+
+                    // Make Shop disabled TRUE if chosen status "Perform to"
+                    if(opt.value === 'Задание выдано') {
+                        shop_cells.forEach(el=> {
+                            el.removeAttribute('disabled');
+                        })
+                    } else {
+                        shop_cells.forEach(el=> {
+                            if(!el.getAttribute('disabled')) {
+                                el.options[0].selected = true;
+                                el.setAttribute('disabled','true')
+                            }
+                        })
+                    }
+                }
+            }
+        }, false);
+
+
+        //Change Status for Shop if Status is "Perform to"
+        status_cells.forEach(el=> {
+            el.addEventListener('change', function() {
+                let options = this.children;
+                for (opt of options) {
+                    if (opt.selected) {
+                        if (opt.value === 'Задание выдано') {
+                            let id = opt.parentNode.dataset.statusId;
+                            shop_cells.forEach(d=> {
+                                if (d.getAttribute('data-shop-id') === id) {
+                                    d.removeAttribute('disabled')
+                                }
+                            })
+                        } else {
+                            let id = opt.parentNode.dataset.statusId;
+                            shop_cells.forEach(d=> {
+                                if (d.getAttribute('data-shop-id') === id) {
+                                    if(!d.getAttribute('disabled')) {
+                                        d.options[0].selected = true;
+                                        d.setAttribute('disabled','true')
+                                    }
+                                }
+                            })
+                        }
+                    }
+                    
+                }
+            }, false)
+        });
+
+        const btn_save = document.getElementById('pack_update_save');
+
+        btn_save.addEventListener('click', function() {
+            
+            let ordersArr = [];
+
+            status_cells.forEach(el=> {
+
+
+                let id = el.dataset.statusId;
+                let message = "Packed Update";
+                let user = '{{userDescription}}'
+                let curator, status, shop;
+
+                let tr = el.parentNode.parentNode;
+                let options = el.children;
+                
+                //Find selected Status
+                for (opt of options) {
+                    if(opt.selected) {
+                        status = opt.value;
+                    }
+                }
+
+                //Find selected Shop
+                if (status === 'Задание выдано') {
+                    let shop_sel = document.getElementById(id);
+                    let options_shop = shop_sel.children;
+                    
+                    for (opt of options_shop) {
+                        if(opt.selected) {
+                            shop = opt.value;
+                        }
+                        if (shop === '') {
+                            return false;
+                        }
+                    }
+                } else if(status === 'В обработке') {
+                    shop = " ";
+                } else {
+                    //Extract shop from row
+                    for (td of tr.children) {
+                        if(td.getAttribute('class') === 'shop') shop = td.textContent;
+                    }
+                }
+
+                //Extract curotor from cookies
+                if ('{{userRole}}' === 'Manager') {
+                    curator = '{{userOrgUnity}}';
+                } else {
+                    //Extract cutator from row
+                    for (td of tr.children) {
+                        if(td.getAttribute('class') === 'curator') curator = td.textContent;
+                    }
+                }
+
+                ordersArr.push({
+                    id,
+                    curator,
+                    status,
+                    shop,
+                    message,
+                    user 
+                })
+
+            })
+
+            console.log(ordersArr);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", '/orders/updatepack/save', true);
+
+            //Send the proper header information along with the request
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function() {//Call a function when the state changes.
+                if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                    // Request finished. Do processing here.
+                    window.location.replace('/orders/updatepack/save');
+                }
+            }
+            
+            xhr.send('orders=' + JSON.stringify(ordersArr));
+
+        }, false);
+
+
+    },  false)
+</script>

@@ -1,0 +1,16 @@
+<div class="container">
+    <form method="POST" action='/orders/delete/confirm'>
+        {{#if order}}
+        <input type="hidden" class="form-control" name="id" value="{{order._id}}">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" name="title" placeholder="Title" value="{{order.orderTitle}}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="desc">Description:</label>
+            <input type="text" class="form-control" name="desc" placeholder="Description" value="{{order.orderDesc}}" disabled>
+        </div>
+        <input type="submit" class="btn btn-warning" value="Delete order">
+        {{/if}}
+    </form>
+</div>

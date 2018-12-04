@@ -1,0 +1,221 @@
+<ul class="nav nav-pills breadcrumb">
+  <li class="nav-item">
+    <a class="breadcrumb-item active" href="/">{{title}}</a>
+  </li>
+  <li class="nav-item">
+    <a class="breadcrumb-item dashboard" href="/dashboard">Панель диаграмм</a>
+  </li>
+</ul>
+<div>
+  {{#if alert}}
+    <div class="alert alert-danger alert-dismissible fade show">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Внимание!</strong> {{alert}}
+    </div>
+  {{/if}}
+  {{#if emptyOrdlist}}
+  <h6>{{emptyOrdlist}}</h6>
+  {{/if}}
+  <div id="table">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                {{#if orderlist.0.date}}
+                <th><a href="?sortBy=date&sortOrd={{sortOrd}}" title="Сортировка по Дате" class="btn btn-link text-dark btn-block">Дата</a></th>
+                {{/if}}
+                {{#if orderlist.0.user}}
+                <th><a href="?sortBy=user&sortOrd={{sortOrd}}" title="Сортировка по Бригаде" class="btn btn-link text-dark btn-block">Бригада</a></th>
+                {{/if}}
+                {{#if orderlist.0.userOrgUnity}}
+                <th><a href="?sortBy=userOrgUnity&sortOrd={{sortOrd}}" title="Сортировка по Орг еденице" class="btn btn-link text-dark btn-block">Орг единица</a></th>
+                {{/if}}
+                {{#if orderlist.0.bush}}
+                <th><a href="?sortBy=bush&sortOrd={{sortOrd}}" title="Сортировка по Кусту" class="btn btn-link text-dark btn-block">Куст</a></th>
+                {{/if}}
+                {{#if orderlist.0.oilfield}}
+                <th><a href="?sortBy=oilfield&sortOrd={{sortOrd}}" title="Сортировка по Месторождению" class="btn btn-link text-dark btn-block">Месторождение</a></th>
+                {{/if}}
+                {{#if orderlist.0.orderRequest}}
+                <th><a href="?sortBy=orderRequest&sortOrd={{sortOrd}}" title="Сортировка по Заявке" class="btn btn-link text-dark btn-block">Заявка</a></th>
+                {{/if}}
+                {{#if orderlist.0.orderQuantity}}
+                <th><a href="?sortBy=orderQuantity&sortOrd={{sortOrd}}" title="Сортировка по Кол-ву" class="btn btn-link text-dark btn-block">Кол-во</a></th>
+                {{/if}}
+                {{#if orderlist.0.orderUnit}}
+                <th><a href="?sortBy=orderUnit&sortOrd={{sortOrd}}" title="Сортировка по Ед.изм" class="btn btn-link text-dark btn-block">Ед.изм</a></th>
+                {{/if}}
+                {{#if orderlist.0.curator}}
+                <th><a href="?sortBy=curator&sortOrd={{sortOrd}}" title="Сортировка по Куратору" class="btn btn-link text-dark btn-block">Куратор</a></th>
+                {{/if}}
+                {{#if orderlist.0.orderStatus}}
+                <th><a href="?sortBy=orderStatus&sortOrd={{sortOrd}}" title="Сортировка по Статусу" class="btn btn-link text-dark btn-block">Статус</a></th>
+                {{/if}}
+                {{#if orderlist.0.shop}}
+                <th><a href="?sortBy=shop&sortOrd={{sortOrd}}" title="Сортировка по Цех / Участок" class="btn btn-link text-dark btn-block">Цех / Участок</a></th>
+                {{/if}}
+                {{#if orderlist.0.daysOn}}
+                <th><span class="btn text-dark btn-block disabled">Дней</span></th>
+                {{/if}}
+            </tr>
+        </thead>
+        <tbody>
+            {{#each orderlist}}
+            <tr>
+                {{#if_notEq userRole 'Crew'}}
+                <td><input type="checkbox" class="" id="" name="" data-href="{{_id}}"></td>
+                {{/if_notEq}}
+                {{#if date}}
+                <td>{{date}}</td>
+                {{/if}}
+                {{#if user}}
+                <td>{{user}}</td>
+                {{/if}}
+                {{#if userOrgUnity}}
+                <td>{{userOrgUnity}}</td>
+                {{/if}}
+                {{#if bush}}
+                <td>{{bush}}</td>
+                {{/if}}
+                {{#if oilfield}}
+                <td>{{oilfield}}</td>
+                {{/if}}
+                {{#if orderRequest}}
+                <td>{{orderRequest}}</td>
+                {{/if}}
+                {{#if orderQuantity}}
+                <td>{{orderQuantity}}</td>
+                {{/if}}
+                {{#if orderUnit}}
+                <td>{{orderUnit}}</td>
+                {{/if}}
+                {{#if curator}}
+                <td>{{curator}}</td>
+                {{/if}}
+                {{#if orderStatus}}
+                <td>{{orderStatus}}</td>
+                {{/if}}
+                {{#if shop}}
+                <td>{{shop}}</td>
+                {{/if}}
+                {{#if daysOn}}
+                <td>{{daysOn}}</td>
+                {{/if}}
+                <td><a href="/orders/view?id={{_id}}">Подробнее</a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('load', function () {
+
+    //Checked the row onclick listener 
+    let tr_els = document.querySelectorAll('tr');
+    tr_els = Array.prototype.slice.call(tr_els);
+    tr_els.forEach(el => {
+        if (el.children[0].firstChild) {
+            el.addEventListener('click', function () {
+                if ('{{userRole}}' !== 'Crew') {
+
+                    if (('{{userRole}}' === 'Shop')) {
+
+                        //Check if the users Shop is asigned to the order
+                        let td_shop;
+                        for (td of el.children) {
+                            if (td.textContent === '{{userOrgUnity}}') td_shop = true;
+                        }
+
+                        checkRow(el, td_shop)
+
+                    } else {
+
+                        checkRow(el, true)
+
+                    }
+
+                } else {
+
+                    //Check if the user is owner of the order
+                    let td_user;
+                    for (td of el.children) {
+                        if (td.textContent === '{{userDescription}}') td_user = true;
+                    }
+
+                    checkRow(el, td_user)
+
+                }
+            }, false);
+        }
+    });
+
+    function checkRow(el, condition) {
+        if (!el.children[0].firstChild.checked && condition) {
+            el.children[0].firstChild.checked = true;
+            el.setAttribute('style', 'background-color:rgba(166, 206, 227, 0.5)');
+        } else {
+            el.children[0].firstChild.checked = false;
+            el.setAttribute('style', 'background-color:rgba(166, 206, 227, 0)');
+        }
+    }
+
+    let orders = [];
+
+    const update_btn = document.getElementById('pack_update');
+
+    update_btn.onclick = function () {
+
+        tr_els.forEach(el => {
+            if (el.children[0].firstChild) {
+                if (el.children[0].firstChild.checked) {
+                    orders.push(el.children[0].firstChild.dataset.href);
+                }
+            }
+        })
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", '/orders/updatepack', true);
+
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function () { //Call a function when the state changes.
+            if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                // Request finished. Do processing here.
+                window.location.replace('/orders/updatepack');
+            }
+        }
+        xhr.send('ordersId=' + orders);
+
+    };
+
+  }, false)
+</script>
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Logout</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Do you want to logout?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <a class="btn btn-warning" href="/logout">Logout</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>

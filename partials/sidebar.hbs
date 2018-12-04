@@ -1,0 +1,490 @@
+{{!-- TITLE PAGE --}}
+{{#if_eq sidebar 'filter'}}
+<div>
+    <a type="button" class="btn btn-outline-light btn-block" href="/" title="Обновить лист заявок">
+        <span style="font-size: 1.3rem">
+            <i class="far fa-clock"></i>
+        </span>
+        Обновлено: {{datenow}}
+    </a>
+</div>
+{{#if_eq userRole "Crew"}}
+<div>
+    <a type="button" class="btn btn-outline-warning btn-block" href="/orders/add">
+        <span style="font-size: 1.3rem">
+            <i class="fas fa-file-medical"></i>
+        </span>
+        Добавить новую заявку
+    </a>
+</div>
+{{/if_eq}}
+{{#if userDescription}}
+    {{#if_notEq userRole 'admin'}}
+    <div>
+        <a type="button" class="btn btn-outline-info btn-block" id="pack_update">
+            <span style="font-size: 1.3rem">
+                <i class="far fa-copy"></i>
+            </span>
+            Обработать заявки
+        </a>
+        
+    </div>
+    {{/if_notEq}}
+{{/if}}
+<div>
+    <a type="button" class="btn btn-outline-success btn-block" href="/excel">
+        <span style="font-size: 1.3rem">
+            <i class="far fa-file-excel"></i>
+        </span>
+        Выгрузить в Excel
+    </a>
+</div>
+
+{{#if_eq userRole "admin"}}
+<div>
+    <a type="button" class="btn btn-outline-info btn-block" href="/users/usersList">
+        <span style="font-size: 1.3rem">
+            <i class="fas fa-users"></i>
+        </span>
+        Пользователи
+    </a>
+</div>
+<div>
+    <a type="button" class="btn btn-outline-info btn-block" href="/rigs">
+        <span style="font-size: 1.3rem">
+            <i class="fas fa-monument"></i>
+        </span>
+        Буровые станки
+    </a>
+</div>
+{{/if_eq}}
+
+<div>
+    <a type="button" class="btn btn-outline-secondary btn-block" id="show-form-filter-btn" value="Show filters">
+        <span style="font-size: 1.3rem">
+            <i class="fas fa-bars"></i>
+        </span>
+        Показать Фильтры
+    </a>
+</div>
+
+<div>
+<form name="filter" style="visibility: hidden" id="show-form-filter">
+    <div id="accordion">
+
+        <div class="btn-group">
+            <a type="button" class="btn btn-outline-danger reset" href="/reset">Сброс</a>
+            <button type="submit" class="btn btn-outline-primary submit">Применить</button>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapse1" id="date">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.date}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="date" checked>
+                        {{else}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="date">
+                        {{/if}}
+                        <label class="custom-control-label" for="customCheck1">Дата</label>
+                    </div>
+                </a>
+            </div>
+            <div id="collapse1" class="collapse">
+                <div class="card-body">
+                    <div class="form-inline">
+                        <input type="date" class="form-control" name="date_from">
+                        <input type="date" class="form-control" name="date_to">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapse3" id="userOrgUnity">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.userOrgUnity}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck3" name="userOrgUnity" checked>
+                        {{else}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck3" name="userOrgUnity">
+                        {{/if}}
+                        <label class="custom-control-label" for="customCheck3">Орг единица</label>
+                    </div>
+                </a>
+            </div>
+            <div id="collapse3" class="collapse">
+                <div class="card-body">
+                    <select class="form-control" id="filter_userOrgUnity" name="filter_userOrgUnity">
+                        <option value="Show All">Показать все</option>
+                        {{#if distinct.userOrgUnity}}
+                            {{#each distinct.userOrgUnity}}
+                                 <option>{{userOrgUnity}}</option>
+                            {{/each}}
+                        {{/if}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapse2" id="user">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.user}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck2" name="user" checked>
+                        {{else}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck2" name="user">
+                        {{/if}}
+                        <label class="custom-control-label" for="customCheck2">Бригада</label>
+                    </div>
+                </a>
+            </div>
+            <div id="collapse2" class="collapse">
+                <div class="card-body">
+                    <select class="form-control" id="filter_user" name="filter_user">
+                        <option value="Show All">Показать все</option>
+                        {{#if distinct.user}}
+                            {{#each distinct.user}}
+                                 <option>{{user}}</option>
+                            {{/each}}
+                        {{/if}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <input style="display:none" type="text" class="custom-control-input" id="customCheck4" name="bush" value="on">
+
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapse5" id="oilfield">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.oilfield}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck5" name="oilfield" checked>
+                        {{else}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck5" name="oilfield">
+                        {{/if}}
+                        <label class="custom-control-label" for="customCheck5">Месторождение</label>
+                    </div>
+                </a>
+            </div>
+            <div id="collapse5" class="collapse">
+                <div class="card-body">
+                    <select class="form-control" id="filter_oilfield" name="filter_oilfield">
+                        <option value="Show All">Показать все</option>
+                        {{#if distinct.oilfield}}
+                            {{#each distinct.oilfield}}
+                                 <option>{{oilfield}}</option>
+                            {{/each}}
+                        {{/if}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <input style="display:none" type="text" class="custom-control-input" id="customCheck6" name="orderRequest" value="on">
+        <input style="display:none" type="text" class="custom-control-input" id="customCheck7" name="orderQuantity" value="on">
+        <input style="display:none" type="text" class="custom-control-input" id="customCheck8" name="orderUnit" value="on">
+        
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapse9" id="curator">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.curator}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck9" name="curator" checked>
+                        {{else}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck9" name="curator">
+                        {{/if}}
+                        <label class="custom-control-label" for="customCheck9">Куратор</label>
+                    </div>
+                </a>
+            </div>
+            <div id="collapse9" class="collapse">
+                <div class="card-body">
+                    <select class="form-control" id="filter_curator" name="filter_curator">
+                        <option value="Show All">Показать все</option>
+                        {{#if distinct.curator}}
+                            {{#each distinct.curator}}
+                                {{#if_eq curator " "}}
+                                 <option value=" ">Не закреплен</option>
+                                {{else}}
+                                 <option>{{curator}}</option>
+                                {{/if_eq}}
+                            {{/each}}
+                        {{/if}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapse10" id="orderStatus">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.orderStatus}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck10" name="orderStatus" checked>
+                        {{else}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck10" name="orderStatus">
+                        {{/if}}
+                        <label class="custom-control-label" for="customCheck10">Статус заявки</label>
+                    </div>
+                </a>
+            </div>
+            <div id="collapse10" class="collapse">
+                <div class="card-body">
+                    <select class="form-control" id="filter_orderStatus" name="filter_orderStatus">
+                        <option value="Show All">Показать все</option>
+                        {{#if distinct.orderStatus}}
+                            {{#each distinct.orderStatus}}
+                                 <option value="{{orderStatus}}">{{orderStatus}}</option>
+                            {{/each}}
+                        {{/if}}
+                        <option value="Выполнено">Показать выполненые заявки</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapse11" id="shop">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.shop}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck11" name="shop" checked>
+                        {{else}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck11" name="shop">
+                        {{/if}}
+                        <label class="custom-control-label" for="customCheck11">Цех/Участок</label>
+                    </div>
+                </a>
+            </div>
+            <div id="collapse11" class="collapse">
+                <div class="card-body">
+                    <select class="form-control" id="filter_shop" name="filter_shop">
+                        <option value="Show All">Показать все</option>
+                        {{#if distinct.shop}}
+                            {{#each distinct.shop}}
+                                {{#if_eq shop " "}}
+                                 <option value=" ">Не закреплен</option>
+                                {{else}}
+                                 <option>{{shop}}</option>
+                                {{/if_eq}}
+                            {{/each}}
+                        {{/if}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+
+        <input style="display:none" type="text" class="custom-control-input" id="customCheck12" name="rig_num" value="on">
+        <input style="display:none" type="text" class="custom-control-input" id="customCheck13" name="rig_type" value="on">
+
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#collapse14" id="daysOn">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.daysOn}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck14" name="daysOn" checked>
+                        {{else}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck14" name="daysOn">
+                        {{/if}}
+                        <label class="custom-control-label" for="customCheck14">Дней в системе (n >= дней)</label>
+                    </div>
+                </a>
+            </div>
+            <div id="collapse14" class="collapse">
+                <div class="card-body">
+                    <div class="form-inline">
+                        <input type="number" class="form-control" style='width: 100%' name="filter_daysOn" placeholder="от 0 дней">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        
+    </div>
+</form>
+</div>
+
+<script>
+    window.addEventListener('load', function () {
+
+        let all_form_Elms = document.forms.filter.elements;
+
+        let checkbox_Elms = [];
+        for (let el of all_form_Elms) {
+            if (el.type === 'checkbox') {
+                checkbox_Elms.push(el)
+            }
+        }
+
+        checkbox_Elms.forEach(elm=>{
+            switchCheck(elm);
+            showCollapse(elm);
+            
+// <<< HANDLE WITH INSTRUCTION for each condition >>>
+            let filter;
+            switch (elm.name) {
+                case 'user':
+                    filter = "{{filter.user}}";
+                    break;
+                case 'userOrgUnity':
+                    filter = "{{filter.userOrgUnity}}";
+                    break;
+                case 'oilfield':
+                    filter = "{{filter.oilfield}}";
+                    break;
+                case 'curator':
+                    filter = "{{filter.curator}}";
+                    break;
+                case 'orderStatus':
+                    filter = "{{filter.orderStatus.$eq}}";
+                    break;
+                case 'shop':
+                    filter = "{{filter.shop}}";
+                    break;
+                default:
+                    filter = "Show All"
+                    break;
+            }
+// <<<                         >>>
+            
+            if(elm.name !== 'daysOn') selectOption('filter_' + elm.name,filter);
+            if(elm.name === 'daysOn') {
+                document.forms.filter['filter_daysOn'].value = '{{daysOn}}';
+            }
+        });
+
+        function switchCheck(elm) {
+                document.getElementById(elm.name).onclick = function () {
+                    if (elm.checked) {
+                        elm.checked = false;
+                        selectOption('filter_' + elm.name,'Show All');
+                    } else {
+                        elm.checked = true;
+                    }
+                }
+        }
+
+        function selectOption(elm_name,condition) {
+                const selEl = document.forms.filter.elements[elm_name];
+                if(selEl) {
+                    for (let opt of selEl) {
+                        if (opt.value == condition) {
+                            selEl.options[opt.index].selected = true;
+                        }
+                    }
+                }
+        }
+
+        function showCollapse(elm) {
+            if (elm.checked) {
+                    let a = document.getElementById(elm.name);
+                    var re = /\S*#/;
+                    var str = a.href;
+                    var newstr = str.replace(re, '');
+                    document.getElementById(newstr).className = "collapse show";
+            }
+        }
+
+        //Show filters
+        document.getElementById('show-form-filter-btn').addEventListener('click',function() {
+            const formEl =  document.getElementById('show-form-filter');
+            if (formEl.getAttribute('style') === "visibility: hidden") {
+                formEl.setAttribute('style','visibility: visible')
+            } else {
+                formEl.setAttribute('style','visibility: hidden')
+            }
+        }, false)
+
+    });
+
+</script>
+
+{{/if_eq}}
+{{!-- END TITLE PAGE --}}
+
+
+{{!-- USER LIST PAGE --}}
+{{#if_eq sidebar 'user'}}
+
+{{#if_eq userRole "admin"}}
+<div>
+    <a type="button" class="btn btn-warning btn-block" href="/users/add">
+        <span style="font-size: 1.3rem">
+            <i class="fas fa-user-plus"></i>
+        </span>
+        Add a new User
+    </a>
+</div>
+<div class="find-form">
+    <form class="form-inline" name="search" action="/users/search">
+        <input class="form-control mr-sm-2" type="text" placeholder="User name" name="name">
+        <button class="btn btn-success" type="submit">
+            <span style="font-size: 1rem">
+                <i class="fas fa-search"></i>
+            </span>
+            Search
+        </button>
+    </form>
+</div>
+{{/if_eq}}
+{{/if_eq}}
+{{!-- END USER LIST PAGE --}}
+
+
+
+{{!-- ORDER VIEW PAGE --}}
+{{#if_eq sidebar 'view order'}}
+
+{{#if userDescription}}
+<div>
+    <a type="button" class="btn btn-primary btn-block" href="/orders/update?id={{order._id}}">
+        <span style="font-size: 1.3rem">
+            <i class="far fa-edit"></i>
+        </span>
+        Обработать заявку
+    </a>
+</div>
+
+{{#if_eq userRole "admin"}}
+<div>
+    <a type="button" class="btn btn-outline-light btn-block" data-toggle="modal" data-target="#deleteModal" href="">Delete The Order</a>
+</div>
+{{/if_eq}}
+
+{{/if}}
+{{/if_eq}}
+{{!-- END ORDER VIEW PAGE --}}
+
+{{!-- ORDER UPDATE PAGE --}}
+{{#if_eq sidebar 'update order'}}
+
+{{#if userDescription}}
+<div>
+    <a type="button" class="btn btn-outline-light btn-block" href="/orders/view?id={{order._id}}">
+        <span style="font-size: 1.1rem">
+            <i class="fas fa-arrow-left"></i>
+        </span>
+        Отмена
+    </a>
+</div>
+{{/if}}
+{{/if_eq}}
+{{!-- END UPDATE PAGE --}}
+
+{{!-- ORDERS PACKED UPDATE PAGE --}}
+{{#if_eq sidebar 'packedupdate order'}}
+
+{{#if userDescription}}
+<div>
+    <input id="pack_update_save" type="button" class="btn btn-outline-warning btn-block" value="Сохранить">
+</div>
+{{/if}}
+{{/if_eq}}
+{{!-- END UPDATE PAGE --}}
+
+

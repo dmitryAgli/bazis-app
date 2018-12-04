@@ -1,0 +1,56 @@
+<header class="page-header">
+    <nav class="navbar navbar-expand-sm bg-light navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">BAZIS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                {{#if userName}}
+                <ul class="navbar-nav">
+                    {{#if_eq userRole "admin"}}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary" href="/users/usersList">Users</a>
+                    </li>
+                    {{/if_eq}}
+                </ul>
+                {{/if}}
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        {{#if userName}}
+                        <a class="btn btn-outline-secondary" data-toggle="modal" data-target="#myModal">{{userName}}</a>
+                        {{else}}
+                        <a class="btn btn-outline-warning" href="/login">Login</a>
+                        {{/if}}
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Logout</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Do you want to logout?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <a class="btn btn-warning" href="/logout">Logout</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<ul class="nav">
+    {{!-- <li class="nav-item nav-title">
+        <p class="nav-link">{{title}}</p>
+    </li> --}}
+    <li class="nav-item ml-auto login-btn">
+        {{#if userName}}
+        <a class="btn btn-outline-secondary" data-toggle="modal" data-target="#myModal">{{userName}}</a>
+        {{else}}
+            {{#if_eq title "User login page"}}
+            <a style="color:rgb(233, 236, 239);" class="btn disabled" href="/login">Выйти</a>
+            {{else}}
+            <a class="btn btn-warning" href="/login">Войти</a>
+            {{/if_eq}}
+        {{/if}}
+    </li>
+</ul>
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Выйти из системы</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Вы хотите выйти из системы?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <a class="btn btn-warning" href="/logout">Выйти</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Лист заявок</a></li>
+  <li class="breadcrumb-item active">{{title}}</li>
+</ul>
+<div class="col-sm-4 align-content-center">
+    {{#if message}}
+    <div class="alert alert-danger alert-dismissible fade show">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Внимание!</strong> {{message}}
+    </div>
+    {{/if}}
+    <form method="POST" action='/passwordCheck'>
+        <div class="form-inline form-inline-custom">
+            <label for="userName">Имя пользователя:</label>
+            <input type="text" class="form-control" name="userName" placeholder="User Name" value="" autofocus required>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="userPassword">Пароль:</label>
+            <input type="password" class="form-control" name="userPassword" placeholder="Password" value="" required>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="submit"></label>
+            <input type="submit" class="btn btn-warning form-control" value="Войти в систему">
+        </div>
+        {{!-- <input type="submit" class="btn btn-primary btn-block" value="Login"> --}}
+    </form>
+</div>

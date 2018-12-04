@@ -1,0 +1,37 @@
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Лист заявок</a></li>
+  <li class="breadcrumb-item active">{{title}}</li>
+</ul>
+{{#if alert}}
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Success!</strong> {{alert}}
+</div>
+{{/if}}
+<ul class="nav">
+    <li class="nav-item">
+        <a class="nav-link" href="/rigs/add">Add the New Rig</a>
+    </li>
+</ul> 
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>rig_id</th>
+            <th>Rig Number</th>
+            <th>Rig Type</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each rigsList}}
+        <tr>
+            <td>{{_id}}</td>
+            <td>{{rig_num}}</td>
+            <td>{{rig_type}}</td>
+            <td>
+                <a href="/rigs/delete?rigId={{_id}}">Delete</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

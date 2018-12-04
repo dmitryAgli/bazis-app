@@ -1,0 +1,89 @@
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Лист заявок</a></li>
+  <li class="breadcrumb-item"><a href="/users/usersList">Users List</a></li>
+  <li class="breadcrumb-item"><a href="/users/edit?id={{user._id}}">Edit user</a></li>
+  <li class="breadcrumb-item active">{{title}}</li>
+</ul> 
+<ul class="nav nav-menu-custom">
+    <li class="nav-item">
+        <button class="btn btn-link" id="submit">Save</button>
+    </li>
+    <li class="nav-item">
+        <button class="btn btn-link" id="reset">Reset</button>
+    </li>
+    <li class="nav-item">
+        <button class="btn btn-link" id="cancel">Cancel</button>
+    </li>
+</ul>
+<div class="col-sm-4">
+    <form name="updateUser" method='POST' action='/users/update'>
+        <div class="form-group" style="display:none">
+            <label for="name">id:</label>
+            <input type="text" class="form-control" name="id" placeholder="id" value={{user._id}}>
+        </div>
+        <div class="form-inline form-inline-custom" id="name">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" name="name" placeholder="bur_7">
+        </div>
+        <div class="form-inline form-inline-custom" id="userDesc">
+            <label for="name">User Description:</label>
+            <input type="text" class="form-control" name="userDesc" placeholder="Бр.Бурения №7 (Лопатин М.А.)">
+        </div>
+        <div class="form-inline form-inline-custom" id="password">
+            <label for="password">Password:</label>
+            <input type="text" class="form-control" name="password" placeholder="Password">
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="role">Select role:</label>
+            <select class="form-control" name="role">
+                <option value="Crew">Crew</option>
+                <option value="Shop">Shop</option>
+                <option value="Manager">Manager</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <div class="form-inline form-inline-custom" id="orgUnity">
+            <label for="orgUnity">Org Unity:</label>
+            <input type="text" class="form-control" name="orgUnity" placeholder="ЦИТС Бр.Бурения">
+        </div>
+        <div class="form-inline form-inline-custom">
+                <label for="submit"></label>
+                <input type="submit" class="btn btn-primary form-control" value="Save">
+        </div>
+    </form>
+</div>
+
+<script>
+    window.onload = function () {
+
+        document.getElementsByName('name')[0].value = "{{user.userName}}";
+        document.getElementsByName('userDesc')[0].value = "{{user.userDescription}}";
+        document.getElementsByName('password')[0].value = "{{user.userPassword}}";
+        document.getElementsByName('orgUnity')[0].value = "{{user.userOrgUnity}}";
+
+        //Sekect User Role for Form
+        selectRole();
+
+        //Events Emitters for Buttons
+        document.getElementById('submit').onclick = function () {
+            document.forms.updateUser.submit()
+        }
+        document.getElementById('reset').onclick = function () {
+            window.location.reload();
+        }
+        document.getElementById('cancel').onclick = function () {
+            window.history.back()
+        }
+
+
+        function selectRole() {
+            const selEl = document.forms.updateUser.elements.role;
+            for (opt of selEl) {
+                if (opt.value == "{{user.userRole}}") {
+                    selEl.options[opt.index].selected = true;
+                }
+            }
+        }
+
+    }
+</script>

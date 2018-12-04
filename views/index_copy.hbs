@@ -1,0 +1,316 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-2">
+            <aside>
+
+                {{#if_eq userRole "Crew"}}
+                <div>
+                    <a type="button" class="btn btn-warning btn-block" href="/orders/add">Add a new request</a>
+                </div>
+                {{/if_eq}}
+
+                <form name="filter">
+                    <div id="accordion">
+                        <div class="card">
+                            <div class="card-header">
+                                <a class="card-link" data-toggle="collapse" href="#collapse1" id="date">
+                                    <div class="custom-control custom-checkbox">
+                                        {{#if orderlist.0.date}}
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="date"
+                                            checked>
+                                        {{else}}
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="date">
+                                        {{/if}}
+                                        <label class="custom-control-label" for="customCheck1">Date</label>
+                                    </div>
+                                </a>
+                            </div>
+                            <div id="collapse1" class="collapse">
+                                <div class="card-body">
+                                    <div class="form-inline">
+                                        <input type="date" class="form-control" name="date_from">
+                                        <input type="date" class="form-control" name="date_to">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <a class="card-link" data-toggle="collapse" href="#collapse2" id="user">
+                                    <div class="custom-control custom-checkbox">
+                                        {{#if orderlist.0.user}}
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2" name="user"
+                                            checked>
+                                        {{else}}
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2" name="user">
+                                        {{/if}}
+                                        <label class="custom-control-label" for="customCheck2">User</label>
+                                    </div>
+                                </a>
+                            </div>
+                            <div id="collapse2" class="collapse">
+                                <div class="card-body">
+                                    <select class="form-control" id="filter_user" name="filter_user">
+                                        <option>Все</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <a type="button" class="btn btn-outline-danger" href="/reset">Reset</a>
+                            <button type="submit" class="btn btn-outline-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+
+                
+                {{!-- <h1>Filter</h1>
+                <form name="filter">
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.date}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck" name="date" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck" name="date">
+                        <label class="custom-control-label" for="customCheck">Date</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.user}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck2" name="user" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck2" name="user">
+                        <label class="custom-control-label" for="customCheck2">User</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.userOrgUnity}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck3" name="userOrgUnity"
+                            checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck3" name="userOrgUnity">
+                        <label class="custom-control-label" for="customCheck3">Org Unity</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.bush}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck4" name="bush" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck4" name="bush">
+                        <label class="custom-control-label" for="customCheck4">Bush</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.oilfield}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck5" name="oilfield" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck5" name="oilfield">
+                        <label class="custom-control-label" for="customCheck5">Oilfield</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.rig_num}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck6" name="rig_num" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck6" name="rig_num">
+                        <label class="custom-control-label" for="customCheck6">Rig number</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.rig_type}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck7" name="rig_type" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck7" name="rig_type">
+                        <label class="custom-control-label" for="customCheck7">Rig Type</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.orderRequest}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck8" name="orderRequest"
+                            checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck8" name="orderRequest">
+                        <label class="custom-control-label" for="customCheck8">Request</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.orderQuantity}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck9" name="orderQuantity"
+                            checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck9" name="orderQuantity">
+                        <label class="custom-control-label" for="customCheck9">Qnt</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.orderUnit}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck10" name="orderUnit" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck10" name="orderUnit">
+                        <label class="custom-control-label" for="customCheck10">Unit</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.curator}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck11" name="curator" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck11" name="curator">
+                        <label class="custom-control-label" for="customCheck11">Curator</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.orderStatus}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck13" name="statusHistory"
+                            checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck13" name="statusHistory">
+                        <label class="custom-control-label" for="customCheck13">Order Status</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{#if orderlist.0.shop}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck12" name="shop" checked>
+                        {{/if}}
+                        <input type="checkbox" class="custom-control-input" id="customCheck12" name="shop">
+                        <label class="custom-control-label" for="customCheck12">Shop</label>
+                    </div>
+                    <div class="btn-group">
+                        <a type="button" class="btn btn-outline-danger" href="/reset">Reset</a>
+                        <button type="submit" class="btn btn-outline-primary">Submit</button>
+                    </div>
+                </form> --}}
+
+            </aside>
+        </div>
+        <div class="col-xl-10">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        {{#if orderlist.0.date}}
+                        <th><a href="?sortBy=date&sortOrd={{sortOrd}}" title="Sorting by Date" class="btn btn-link text-dark btn-block">Date</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.user}}
+                        <th><a href="?sortBy=user&sortOrd={{sortOrd}}" title="Sorting by User" class="btn btn-link text-dark btn-block">User</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.userOrgUnity}}
+                        <th><a href="?sortBy=userOrgUnity&sortOrd={{sortOrd}}" title="Sorting by OrgUnity" class="btn btn-link text-dark btn-block">Org
+                                Unity</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.bush}}
+                        <th><a href="?sortBy=bush&sortOrd={{sortOrd}}" title="Sorting by Bush" class="btn btn-link text-dark btn-block">Bush</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.oilfield}}
+                        <th><a href="?sortBy=oilfield&sortOrd={{sortOrd}}" title="Sorting by Oilfield" class="btn btn-link text-dark btn-block">Oilfield</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.rig_num}}
+                        <th><a href="?sortBy=rig_num&sortOrd={{sortOrd}}" title="Sorting by Rig Type" class="btn btn-link text-dark btn-block">Rig
+                                Number</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.rig_type}}
+                        <th><a href="?sortBy=rig_type&sortOrd={{sortOrd}}" title="Sorting by Rig Type" class="btn btn-link text-dark btn-block">Rig
+                                Type</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.orderRequest}}
+                        <th><a href="?sortBy=orderRequest&sortOrd={{sortOrd}}" title="Sorting by Request" class="btn btn-link text-dark btn-block">Request</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.orderQuantity}}
+                        <th><a href="?sortBy=orderQuantity&sortOrd={{sortOrd}}" title="Sorting by Qnt" class="btn btn-link text-dark btn-block">Qnt</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.orderUnit}}
+                        <th><a href="?sortBy=orderUnit&sortOrd={{sortOrd}}" title="Sorting by Unit" class="btn btn-link text-dark btn-block">Unit</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.curator}}
+                        <th><a href="?sortBy=curator&sortOrd={{sortOrd}}" title="Sorting by Curator" class="btn btn-link text-dark btn-block">Curator</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.orderStatus}}
+                        <th><a href="?sortBy=orderStatus&sortOrd={{sortOrd}}" title="Sorting by Status" class="btn btn-link text-dark btn-block">Status</a></th>
+                        {{/if}}
+                        {{#if orderlist.0.shop}}
+                        <th><a href="?sortBy=shop&sortOrd={{sortOrd}}" title="Sorting by Shop" class="btn btn-link text-dark btn-block">Shop</a></th>
+                        {{/if}}
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each orderlist}}
+                    <tr>
+                        {{#if date}}
+                        <td>{{date}}</td>
+                        {{/if}}
+                        {{#if user}}
+                        <td>{{user}}</td>
+                        {{/if}}
+                        {{#if userOrgUnity}}
+                        <td>{{userOrgUnity}}</td>
+                        {{/if}}
+                        {{#if bush}}
+                        <td>{{bush}}</td>
+                        {{/if}}
+                        {{#if oilfield}}
+                        <td>{{oilfield}}</td>
+                        {{/if}}
+                        {{#if rig_num}}
+                        <td>{{rig_num}}</td>
+                        {{/if}}
+                        {{#if rig_type}}
+                        <td>{{rig_type}}</td>
+                        {{/if}}
+                        {{#if orderRequest}}
+                        <td>{{orderRequest}}</td>
+                        {{/if}}
+                        {{#if orderQuantity}}
+                        <td>{{orderQuantity}}</td>
+                        {{/if}}
+                        {{#if orderUnit}}
+                        <td>{{orderUnit}}</td>
+                        {{/if}}
+                        {{#if curator}}
+                        <td>{{curator}}</td>
+                        {{/if}}
+                        {{#if orderStatus}}
+                        <td>{{orderStatus}}</td>
+                        {{/if}}
+                        {{#if shop}}
+                        <td>{{shop}}</td>
+                        {{/if}}
+                        <td><a href="/orders/view?id={{_id}}">View</a></td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+
+        let all_form_Elms = document.forms.filter.elements;
+
+        let checkbox_Elms = [];
+        for (el of all_form_Elms) {
+            if (el.type === 'checkbox') {
+                checkbox_Elms.push(el)
+            }
+        }
+
+        function switchCheck(elm) {
+            elm.forEach(function (d) {
+                document.getElementById(d.name).onclick = function () {
+                    if (d.checked) {
+                        d.checked = false;
+                    } else {
+                        d.checked = true;
+                    }
+                }
+            })
+        }
+
+        function showCollapse(elm) {
+            elm.forEach(function (d) {
+                if (d.checked) {
+                    let a = document.getElementById(d.name);
+                    var re = /\S*#/;
+                    var str = a.href;
+                    var newstr = str.replace(re, '');
+                    document.getElementById(newstr).className = "collapse show";
+                } 
+            })
+        }
+
+        switchCheck(checkbox_Elms);
+        showCollapse(checkbox_Elms);
+    }
+</script>

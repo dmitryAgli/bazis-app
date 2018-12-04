@@ -1,0 +1,72 @@
+/* body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+} */
+
+body, .form-control {
+  font-size: 13px;
+}
+
+aside, .row {
+  background-color: #f8f9fa;
+}
+
+aside > form > div {
+  padding: 0.5rem 0.75rem;
+}
+
+aside .btn-group {
+  width: 100%;
+  margin-top: 15px;
+}
+
+aside .btn-group > .btn {
+  width: 50%;
+  font-size: 13px;
+}
+
+aside > h1 {
+  padding: 1.3rem;
+}
+
+aside > div {
+  padding: 0.5rem 0.75rem;
+}
+
+.navbar-brand {
+  margin-left: 4rem;
+}
+
+.form-inline .form-control {
+  width: 50%;
+}
+
+th > .btn, aside > h1 {
+  font-size: 13px;
+  font-weight: bold;
+  text-align: left;
+  padding-left: 0;
+  border-color: transparent;
+}
+
+.col-xl-10 {
+  background-color: white;
+}
+
+@font-face {
+  font-family: 'ethnocentricregular';
+  src: url('../fonts/ethnocentric_rg-webfont.woff') format('woff2'),
+       url('../fonts/ethnocentric_rg-webfont.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.navbar-brand {
+  font-family: 'ethnocentricregular';
+  font-size: 1.6rem;
+}
+

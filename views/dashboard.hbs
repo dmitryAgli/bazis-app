@@ -1,0 +1,827 @@
+<ul class="nav nav-pills breadcrumb">
+  <li class="nav-item">
+    <a class="breadcrumb-item" href="/">Лист заявок</a>
+  </li>
+  <li class="nav-item">
+    <a class="breadcrumb-item dashboard active" href="/dashboard">{{title}}</a>
+  </li>
+</ul>
+<div class="dashboard-panel" id="dashboard">
+    <div class="dashboard-panel-total d-flex">
+        <div class="top-panel" data-toggle="Show All">
+            <p class="top-panel-header">Всего заявок:</p>
+            <p class="top-panel-number" id="top-panel-total"></p>
+        </div>
+        {{#each distinct.userOrgUnity}}
+        <div class="top-panel" data-toggle="{{userOrgUnity}}">
+            <p class="top-panel-header">{{userOrgUnity}}</p>
+            <p class="top-panel-number" id="top-panel-{{userOrgUnity}}"></p>
+        </div>
+        {{/each}}
+    </div>
+    <div class="dashboard-panel-barchart">
+
+    </div>
+    <div class="dashboard-panel-piechart-status d-flex">
+        {{#each distinct.orderStatus}}
+        <div class="status-panel status" data-toggle="{{orderStatus}}">
+            <p class="status-panel-chart" id="pie-panel-{{orderStatus}}"></p>
+        </div>
+        {{/each}}
+    </div>
+    <div class="dashboard-panel-piechart-curator d-flex">
+        {{#each distinct.curator}}
+        <div class="status-panel curator" data-toggle="{{curator}}">
+            <p class="status-panel-chart" id="pie-panel-{{curator}}"></p>
+        </div>
+        {{/each}}
+    </div>
+    <div class="dashboard-panel-piechart-daysOn d-flex">
+        {{#each daysOnfilter}}
+        <div class="status-panel days" data-toggle="{{id}}">
+            <p class="status-panel-chart" id="pie-panel-{{id}}"></p>
+        </div>
+        {{/each}}
+    </div>
+</div>
+<script src="/assets/vendor/d3/index.js"></script>
+
+<script>
+    window.addEventListener('load', function() {
+
+        function selectOption(elm_name,condition) {
+                const selEl = document.forms.filter.elements[elm_name];
+                if(selEl) {
+                    for (opt of selEl) {
+                        if (opt.value == condition) {
+                            selEl.options[opt.index].selected = true;
+                        }
+                    }
+                }
+        }
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //DASHBOARD CODE HERE
+        
+            const orderlist = {{{json orderlist}}};
+            const distincctObj = ({{{json distinct}}});
+            
+    //TOP PANEL CODE HERE
+
+            //Insert count of orders for each orgunity
+            document.getElementById('top-panel-total').textContent = orderlist.length;
+            
+            distincctObj.userOrgUnity.forEach((org)=> {
+                let filter = orderlist.filter((d)=> {
+                    return d.userOrgUnity === org.userOrgUnity; 
+                });
+                document.getElementById('top-panel-' + org.userOrgUnity).textContent = filter.length
+            })
+
+            //Add filter function for each top-panel
+            document.querySelectorAll(".top-panel").forEach((div)=> {
+                let data_toogle = div.getAttribute('data-toggle');
+                div.onclick = function() {
+                    selectOption('filter_userOrgUnity',data_toogle);
+                    if (data_toogle === "Show All") {
+                        window.location.assign("/dashboard/reset")
+                    } else {
+                        document.forms.filter.submit()
+                    }
+                }
+            })
+            
+
+    // BAR CHART CODE HERE
+
+            //Declare variables
+            let barChartPanel = document.querySelector('.dashboard-panel-barchart');
+            
+            let chart_bar = {},
+			width_bar = barChartPanel.clientWidth,
+			height_bar = barChartPanel.clientHeight,
+			margin_bar = {
+				top: 30,
+				bottom: 30,
+				left: 30,
+				right: 30
+			},
+			svg_bar,
+			bodyG_bar;
+
+            //Handle data
+
+            distincctObj.user.sort((a,b)=> (a.user > b.user ? 1 : ((b.user > a.user) ? -1 : 0)));
+
+            let data = distincctObj.user.map((user,i)=> {
+                let filter = orderlist.filter((d)=> {
+                    return d.user === user.user; 
+                });
+
+                return {
+                    x: user.user.match(/^\w\w\w_\d/)[0],
+                    y: filter.length
+                } 
+            })
+
+            //CREATE SVG, AXIS, CLIPPATH
+				svg_bar = d3.select('.dashboard-panel-barchart')
+						.append('svg')
+						.attr('width',width_bar )
+						.attr('height',height_bar);
+
+                //Append title for bar
+                svg_bar
+                        .append('text')
+                        .attr('x',30)
+                        .attr('y',30)
+                        .text('Заявки по бригадам')
+                        .attr('width','20px')
+                        .attr('height','20px')
+                        .style('fill', "#6c757d")
+                        .style('font-size', '1.1rem')
+                
+                //Render Axis
+
+					//Append group for axis
+					let axisG = svg_bar.append('g')
+								.attr('class', 'axis');
+				
+					//Create X,Y,R scales
+					xScale = d3.scale.ordinal()
+								.domain(distincctObj.user.map((user)=> {
+                                    let label = user.user.match(/^\w\w\w_\d/)[0];
+                                    return label;
+                                    }))
+								.rangeRoundBands(
+									[0, width_bar-margin_bar.left-margin_bar.right],
+									0.05);
+
+					yScale = d3.scale.linear()
+								.domain([0,d3.max(data,function(d) {return d.y + d.y/10})])
+								.range([height_bar-margin_bar.bottom-margin_bar.top,0]);
+
+					//Create X,Y axis
+					xAxis = d3.svg.axis()
+								.orient('bottom')
+								.scale(xScale)
+								.tickPadding(5);
+
+					yAxis = d3.svg.axis()
+								.orient('left')
+								.scale(yScale)
+								.tickSize(-(width_bar-margin_bar.right-margin_bar.left))
+								.tickPadding(5);
+				
+					//Append X,Y axis
+					axisG.append('g')
+							.attr('class','axis x')
+							.attr('transform', function() {
+								return 'translate('+ margin_bar.left+','+(height_bar-margin_bar.bottom)+')';
+							})
+							.call(xAxis);
+
+					axisG.append('g')
+							.attr('class','axis y')
+							.attr('transform', function() {
+								return 'translate('+margin_bar.left+','+margin_bar.top+')';
+							})
+							.call(yAxis);
+				
+				//Define body clip
+				svg_bar.append('defs')
+					.append('clipPath')
+					.attr('id','body-clip')
+					.append('rect')
+					.attr('x','0')
+					.attr('y','0')
+					.attr('width',width_bar-margin_bar.right-margin_bar.left)
+					.attr('height',height_bar-margin_bar.top-margin_bar.bottom);
+
+            //CREATE BARS
+
+				//Render body with clippath
+					bodyG_bar = svg_bar.append('g')
+							.attr('class','bodyG')
+							.attr('transform','translate('+margin_bar.left+','+margin_bar.top+')')
+							.attr('clip-path','url(#body-clip)');
+
+			    //Render bars
+
+				    var selection = bodyG_bar.selectAll('rect').data(data);
+
+				    	//Enter
+				    	selection.enter()
+				    			.append('rect')
+				    			.attr('class','bar')
+                                .attr('y', height_bar-margin_bar.bottom)
+                                .attr('height', function(d) {
+				    				return 0;
+				    			});
+				    	//Update
+				    	selection
+				    			.transition().duration(800)
+				    			.attr('x', function(d,i) {
+				    				return xScale(d.x);
+				    			})
+				    			.attr('y', function(d) {
+				    				return yScale(d.y);
+				    			})
+				    			.attr('width',xScale.rangeBand())
+				    			.attr('height', function(d) {
+				    				return height_bar-margin_bar.bottom-yScale(d.y);
+				    			})
+
+                        selection
+                                .append('title')
+                                .text(function(d,i) {
+                                    return distincctObj.user[i].user;
+                                });
+
+				  //Render labels
+
+				    var selection = bodyG_bar.selectAll('text').data(data);
+
+				    	//Enter
+				    	selection.enter()
+				    			.append('text')
+				    			.attr('class','text')
+                                .attr('y', height_bar-margin_bar.bottom)
+                                .attr('height', function(d) {
+				    				return 0;
+				    			});
+
+				    	//Update
+				    	selection
+				    			.style('fill', function(d,i) {
+				    				return '#a6cee3';
+				    			})
+				    			.attr('text-anchor', 'middle')
+				    			.transition().duration(800)
+				    			.text(function(d) {
+				    				return d.y;
+				    			})
+				    			.attr('x', function (d, i) { 
+				    				return xScale(d.x) + xScale.rangeBand() / 2;})
+				    			.attr('y', function(d) {
+				    				return yScale(d.y)-5;
+				    			})
+				    			.attr('width',xScale.rangeBand())
+				    			.attr('height', function(d) {
+				    				return yScale(d.y);
+				    			})
+                                
+            //Add filter function for each bar
+            document.querySelectorAll("rect.bar").forEach((rect)=> {
+                        let data = rect.childNodes[0].textContent;
+                        rect.onclick = function() {
+                            selectOption('filter_user',data);
+                            document.forms.filter.submit()
+                        }
+                    })
+
+
+    //STATUS PIE CHART CODE HERE
+            const statusList = distincctObj.orderStatus;
+
+            let width_pie, height_pie;
+
+            statusList.forEach((obj,i)=>{
+
+                let ordStatStr = obj.orderStatus.replace(/\s/,'-');
+
+                let pieChartPanel = document.getElementById('pie-panel-'+obj.orderStatus);
+                pieChartPanel.setAttribute('id','pie-panel-'+ordStatStr);
+
+                let panelid = '#pie-panel-'+ordStatStr;
+                
+                let pie_bar = {};
+
+                if(!width_pie) width_pie = pieChartPanel.clientWidth;
+                if(!height_pie) height_pie = pieChartPanel.clientHeight;
+                
+                let margin_bar = {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    right: 10
+                },
+                svg_pie,
+                bodyG_pie,
+                pieG,
+		        radius = 0.3333 * height_pie,
+		        innerRadius = 0.2121 * height_pie,
+                colors = ['rgba(31, 120, 180, 0.9)','rgb(166, 206, 227)']
+
+
+                //Handle the data
+                let pieData = [obj].map((o,i)=> {
+                    let filter = orderlist.filter((d)=> {
+                        return d.orderStatus === o.orderStatus; 
+                    });
+
+                    return {
+                        id: o.orderStatus,
+                        value: filter.length
+                    } 
+                })
+
+                pieData.push({
+                        id: 'total',
+                        value: orderlist.length - pieData[0].value
+                })
+
+                
+                    svg_pie = d3.select(panelid).append('svg')
+                            .attr('width',width_pie)
+                            .attr('height',height_pie)
+
+                            //Define bodyclip
+                            svg_pie.append('defs')
+                                .append('clipPath')
+                                .attr('id','body-clip')
+                                .append('rect')
+                                .attr('x',0)
+                                .attr('y',0)
+                                .attr('width',width_pie)
+                                .attr('height',height_pie)
+
+                            bodyG_pie = svg_pie.append('g')
+                                .attr('class','bodyG')
+                                .attr('transform','translate(0,0)')
+                                .attr('clip-path','url(#body-clip)')
+                
+                    //Render pieChart
+			
+                            let pie = d3.layout.pie()
+                                    .sort(function (d) {
+                                        return d.id;
+                                    })
+                                    .value(function (d) {
+                                        return d.value;
+                                    });
+
+                            let arc = d3.svg.arc()
+                                    .outerRadius(radius)
+                                    .innerRadius(innerRadius);
+
+                            pieG = bodyG_pie.append('g')
+                                    .attr('class','pie')
+                                    .attr('transform','translate('+width_pie/2+','+height_pie/2+')');
+                    
+                    let selection = pieG.selectAll('path.arc').data(pie(pieData));
+
+                        //Enter
+                        selection.enter()
+                            .append('path')
+                            .attr('class','arc')
+                            .attr('fill', function (d,i) {
+                                return colors[i];
+                        });
+                            
+                        //Update
+                        selection.transition().duration(800)
+                            .attrTween("d", function (d) {
+                            var currentArc = this.__current__; // <-C
+
+                            if (!currentArc)
+                                currentArc = {startAngle: 0, 
+                                                endAngle: 0};
+
+                            var interpolate = d3.interpolate(
+                                                currentArc, d);
+                                                
+                            this.__current__ = interpolate(1);//<-D
+                            
+                            return function (t) {
+                                return arc(interpolate(t));
+                            };
+                        });
+
+                    //Render Pie labels
+
+                    let pieLabelData = [pieData[0]];
+
+				    let pieLabel = pieG.selectAll('text.pieLabel').data(pie(pieLabelData));
+
+				    	//Enter
+				    	pieLabel.enter()
+				    			.append('text')
+				    			.attr('class','pieLabel')
+                                .attr('y', '15px')
+                                .attr('transform', 'scale(1,0)')
+                                .attr('opacity', 0)
+
+				    	//Update
+				    	pieLabel
+				    			.attr('text-anchor', 'middle')
+				    			.transition().duration(800)
+                                .attr('transform', 'scale(1,1)')
+                                .attr('opacity', 1)
+				    			.text(function(d) {
+				    				return d.value;
+				    			})
+				    			.attr('x', function (d) { 
+				    				return 0})
+				    			.attr('y', function(d) {
+				    				return '15px';
+				    			})
+
+                    //Render Pie Titles
+
+                    let pieTitleData = [pieData[0]];
+
+				    let pieTitle = pieG.selectAll('text.pieTitle').data(pie(pieTitleData));
+
+				    	//Enter
+				    	pieTitle.enter()
+				    			.append('text')
+				    			.attr('class','pieTitle')
+
+				    	//Update
+				    	pieTitle
+				    			.attr('text-anchor', 'middle')
+				    			.transition().duration(800)
+				    			.text(function(d) {
+				    				return d.data.id;
+				    			})
+                                .attr('fill','rgb(108, 117, 125)')
+				    			.attr('x', function (d) { 
+				    				return 0})
+				    			.attr('y', function(d) {
+				    				return '-135px';
+				    			})
+
+            })
+                
+                //Add filter function for each status panel
+                document.querySelectorAll(".status").forEach((div)=> {
+                    let data_toogle = div.getAttribute('data-toggle');
+                    div.onclick = function() {
+                        selectOption('filter_orderStatus',data_toogle);
+                        document.forms.filter.submit()
+                    }
+                })
+    
+    
+    //DAYS PIE CHART CODE HERE
+            let width_pie_daysOn, height_pie_daysOn;
+
+            const daysOnfilter = {{{json daysOnfilter}}};
+
+            daysOnfilter.forEach((obj,i)=>{
+
+                let ordStatStr = obj.id.replace(/\s/g,'-');
+
+                let pieChartPanel = document.getElementById('pie-panel-'+obj.id);
+                pieChartPanel.setAttribute('id','pie-panel-'+ordStatStr);
+
+                let panelid = '#pie-panel-'+ ordStatStr;
+                
+                let pie_bar = {};
+
+                if(!width_pie_daysOn) width_pie_daysOn = pieChartPanel.clientWidth;
+                if(!height_pie_daysOn) height_pie_daysOn = pieChartPanel.clientHeight;
+                
+                let margin_bar = {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    right: 10
+                },
+                svg_pie,
+                bodyG_pie,
+                pieG,
+		        radius = 0.3333 * height_pie,
+		        innerRadius = 0.2121 * height_pie,
+                colors = ['rgb(255, 127, 14)','rgb(255, 187, 120)']
+
+
+                //Handle the data
+                let pieData = [obj].map((o,i)=> {
+                    return obj
+                })
+
+                pieData.push({
+                        id: 'total',
+                        count: orderlist.length - pieData[0].count
+                })
+
+                
+                    svg_pie = d3.select(panelid).append('svg')
+                            .attr('width',width_pie_daysOn)
+                            .attr('height',height_pie_daysOn)
+
+                            //Define bodyclip
+                            svg_pie.append('defs')
+                                .append('clipPath')
+                                .attr('id','body-clip')
+                                .append('rect')
+                                .attr('x',0)
+                                .attr('y',0)
+                                .attr('width',width_pie_daysOn)
+                                .attr('height',height_pie_daysOn)
+
+                            bodyG_pie = svg_pie.append('g')
+                                .attr('class','bodyG')
+                                .attr('transform','translate(0,0)')
+                                .attr('clip-path','url(#body-clip)')
+                
+                    //Render pieChart
+			
+                            let pie = d3.layout.pie()
+                                    .sort(function (d) {
+                                        return d.id;
+                                    })
+                                    .value(function (d) {
+                                        return d.count;
+                                    });
+
+                            let arc = d3.svg.arc()
+                                    .outerRadius(radius)
+                                    .innerRadius(innerRadius);
+
+                            pieG = bodyG_pie.append('g')
+                                    .attr('class','pie')
+                                    .attr('transform','translate('+width_pie_daysOn/2+','+height_pie_daysOn/2+')');
+                    
+                    let selection = pieG.selectAll('path.arc').data(pie(pieData));
+
+                        //Enter
+                        selection.enter()
+                            .append('path')
+                            .attr('class','arc')
+                            .attr('fill', function (d,i) {
+                                return colors[i];
+                        });
+                            
+                        //Update
+                        selection.transition().duration(800)
+                            .attrTween("d", function (d) {
+                            var currentArc = this.__current__; // <-C
+
+                            if (!currentArc)
+                                currentArc = {startAngle: 0, 
+                                                endAngle: 0};
+
+                            var interpolate = d3.interpolate(
+                                                currentArc, d);
+                                                
+                            this.__current__ = interpolate(1);//<-D
+                            
+                            return function (t) {
+                                return arc(interpolate(t));
+                            };
+                        });
+
+                    //Render Pie labels
+
+                    let pieLabelData = [pieData[0]];
+
+				    let pieLabel = pieG.selectAll('text.pieLabel').data(pie(pieLabelData));
+
+				    	//Enter
+				    	pieLabel.enter()
+				    			.append('text')
+				    			.attr('class','pieLabel')
+                                .attr('y', '15px')
+                                .attr('transform', 'scale(1,0)')
+                                .attr('opacity', 0)
+
+				    	//Update
+				    	pieLabel
+				    			.attr('text-anchor', 'middle')
+				    			.transition().duration(800)
+                                .attr('transform', 'scale(1,1)')
+                                .attr('opacity', 1)
+                                .attr('fill', 'rgb(255, 127, 14)')
+				    			.text(function(d) {
+				    				return d.data.count;
+				    			})
+				    			.attr('x', function (d) { 
+				    				return 0})
+				    			.attr('y', function(d) {
+				    				return '15px';
+				    			})
+
+                    //Render Pie Titles
+
+                    let pieTitleData = [pieData[0]];
+
+				    let pieTitle = pieG.selectAll('text.pieTitle').data(pie(pieTitleData));
+
+				    	//Enter
+				    	pieTitle.enter()
+				    			.append('text')
+				    			.attr('class','pieTitle')
+
+				    	//Update
+				    	pieTitle
+				    			.attr('text-anchor', 'middle')
+				    			.transition().duration(800)
+				    			.text(function(d) {
+				    				return d.data.id;
+				    			})
+                                .attr('fill','rgb(108, 117, 125)')
+				    			.attr('x', function (d) { 
+				    				return 0})
+				    			.attr('y', function(d) {
+				    				return '-135px';
+				    			})
+            })
+            //Add filter function for each daysOn panel
+                document.querySelectorAll(".days").forEach((div)=> {
+                    let data_toogle = div.getAttribute('data-toggle');
+                    data_toogle = data_toogle.match(/\d+/g);
+                    div.onclick = function() {
+                        document.forms.filter['filter_daysOn'].value = data_toogle[0];
+                        document.forms.filter.submit()
+                    }
+                })
+        
+        //CURATOR PIE CHART CODE HERE
+            const curatorList = distincctObj.curator;
+
+            let width_pie_curator, height_pie_curator;
+
+            curatorList.forEach((obj,i)=>{
+
+                let ordStatStr = obj.curator.replace(/\s/,'-');
+
+                let pieChartPanel = document.getElementById('pie-panel-'+obj.curator);
+                pieChartPanel.setAttribute('id','pie-panel-'+ordStatStr);
+
+                let panelid = '#pie-panel-'+ordStatStr;
+                
+                let pie_bar = {};
+
+                if(!width_pie_curator) width_pie_curator = pieChartPanel.clientWidth;
+                if(!height_pie_curator) height_pie_curator = pieChartPanel.clientHeight;
+                
+                let margin_bar = {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    right: 10
+                },
+                svg_pie,
+                bodyG_pie,
+                pieG,
+		        radius = 0.3333 * height_pie,
+		        innerRadius = 0.2121 * height_pie,
+                colors = ['rgb(148, 103, 189)','rgb(197, 176, 213)']
+
+
+                //Handle the data
+                let pieData = [obj].map((o,i)=> {
+                    let filter = orderlist.filter((d)=> {
+                        return d.curator === o.curator; 
+                    });
+
+                    return {
+                        id: o.curator,
+                        value: filter.length
+                    } 
+                })
+
+                pieData.push({
+                        id: 'total',
+                        value: orderlist.length - pieData[0].value
+                })
+
+                
+                    svg_pie = d3.select(panelid).append('svg')
+                            .attr('width',width_pie_curator)
+                            .attr('height',height_pie_curator)
+
+                            //Define bodyclip
+                            svg_pie.append('defs')
+                                .append('clipPath')
+                                .attr('id','body-clip')
+                                .append('rect')
+                                .attr('x',0)
+                                .attr('y',0)
+                                .attr('width',width_pie_curator)
+                                .attr('height',height_pie_curator)
+
+                            bodyG_pie = svg_pie.append('g')
+                                .attr('class','bodyG')
+                                .attr('transform','translate(0,0)')
+                                .attr('clip-path','url(#body-clip)')
+                
+                    //Render pieChart
+			
+                            let pie = d3.layout.pie()
+                                    .sort(function (d) {
+                                        return d.id;
+                                    })
+                                    .value(function (d) {
+                                        return d.value;
+                                    });
+
+                            let arc = d3.svg.arc()
+                                    .outerRadius(radius)
+                                    .innerRadius(innerRadius);
+
+                            pieG = bodyG_pie.append('g')
+                                    .attr('class','pie')
+                                    .attr('transform','translate('+width_pie_curator/2+','+height_pie_curator/2+')');
+                    
+                    let selection = pieG.selectAll('path.arc').data(pie(pieData));
+
+                        //Enter
+                        selection.enter()
+                            .append('path')
+                            .attr('class','arc')
+                            .attr('fill', function (d,i) {
+                                return colors[i];
+                        });
+                            
+                        //Update
+                        selection.transition().duration(800)
+                            .attrTween("d", function (d) {
+                            var currentArc = this.__current__; // <-C
+
+                            if (!currentArc)
+                                currentArc = {startAngle: 0, 
+                                                endAngle: 0};
+
+                            var interpolate = d3.interpolate(
+                                                currentArc, d);
+                                                
+                            this.__current__ = interpolate(1);//<-D
+                            
+                            return function (t) {
+                                return arc(interpolate(t));
+                            };
+                        });
+
+                    //Render Pie labels
+
+                    let pieLabelData = [pieData[0]];
+
+				    let pieLabel = pieG.selectAll('text.pieLabel').data(pie(pieLabelData));
+
+				    	//Enter
+				    	pieLabel.enter()
+				    			.append('text')
+				    			.attr('class','pieLabel')
+                                .attr('y', '15px')
+                                .attr('transform', 'scale(1,0)')
+                                .attr('opacity', 0)
+
+				    	//Update
+				    	pieLabel
+				    			.attr('text-anchor', 'middle')
+				    			.transition().duration(800)
+                                .attr('transform', 'scale(1,1)')
+                                .attr('opacity', 1)
+				    			.text(function(d) {
+				    				return d.value;
+				    			})
+				    			.attr('x', function (d) { 
+				    				return 0})
+				    			.attr('y', function(d) {
+				    				return '15px';
+				    			})
+
+                    //Render Pie Titles
+
+                    let pieTitleData = [pieData[0]];
+
+				    let pieTitle = pieG.selectAll('text.pieTitle').data(pie(pieTitleData));
+
+				    	//Enter
+				    	pieTitle.enter()
+				    			.append('text')
+				    			.attr('class','pieTitle')
+
+				    	//Update
+				    	pieTitle
+				    			.attr('text-anchor', 'middle')
+				    			.transition().duration(800)
+				    			.text(function(d) {
+                                    if(d.data.id === " ") return "Куратор не закреплен";
+				    				return d.data.id;
+				    			})
+                                .attr('fill','rgb(108, 117, 125)')
+				    			.attr('x', function (d) { 
+				    				return 0})
+				    			.attr('y', function(d) {
+				    				return '-135px';
+				    			})
+
+            })
+                
+                //Add filter function for each status panel
+                document.querySelectorAll(".curator").forEach((div)=> {
+                    let data_toogle = div.getAttribute('data-toggle');
+                    div.onclick = function() {
+                        selectOption('filter_curator',data_toogle);
+                        document.forms.filter.submit()
+                    }
+                })
+
+        
+    }, false)
+</script>

@@ -1,0 +1,50 @@
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Лист заявок</a></li>
+  <li class="breadcrumb-item active">{{title}}</li>
+</ul> 
+<div class="col-md-5">
+    <form method='POST' action='/orders/save'>
+
+        <input type="hidden" class="form-control" name="user_desc" value="{{userDescription}}">
+        <input type="hidden" class="form-control" name="user_orgUnity" value="{{userOrgUnity}}">
+
+        <div class="form-inline form-inline-custom">
+            <label for="order_bush_id">Выберете куст:</label>
+            <select class="form-control" name="order_bush_id" required >
+                {{#each userBushs}}
+                <option value='{{bush_id}}'>{{userBush}} {{userOilField}}</option>
+                {{/each}}
+            </select>
+            <a href="/bushList">Добавить куст</a>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="order_req">Заявка:</label>
+            <input type="text" class="form-control" name="order_req" placeholder="Заявляемый материал / услуга" required >
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="order_quantity">Кол-во:</label>
+            <input type="number" class="form-control" name="order_quantity" placeholder="Кол-во" required >
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="order_unit">Выберете ед.изм.:</label>
+            <select class="form-control" name="order_unit" required >
+                <option value="шт" selected>Штука</option>
+                <option value="м">Метр</option>
+                <option value="кг">Киллограмм</option>
+                <option value="л">Литр</option>
+                <option value="кп">Комлект</option>
+                <option value="усл">Услуга</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="order_desc">Дополнительная информация:</label>
+            <textarea name="order_desc" class="form-control" cols="30" rows="10" placeholder="Основание для выдачи заявки" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-warning btn-block">
+            <span style="font-size: 1.5rem">
+                <i class="far fa-save"></i>
+            </span>
+            Сохранить заявку
+        </button>
+    </form>
+</div>

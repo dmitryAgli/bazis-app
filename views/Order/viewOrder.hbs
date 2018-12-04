@@ -1,0 +1,97 @@
+<ul class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Лист заявок</a></li>
+    <li class="breadcrumb-item active">{{title}}</li>
+</ul>
+
+<div class="col-sm-6">
+    <form action='/'>
+        {{#if order}}
+        <input type="hidden" class="form-control" name="id" value="{{order._id}}">
+        <div class="form-inline form-inline-custom">
+            <label for="status">Статус:</label>
+            <input type="text" class="form-control" name="status" placeholder="" value="{{orderStatus}}" disabled>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="user">Бригада:</label>
+            <input type="text" class="form-control" name="user" placeholder="User" value="{{order.user}}" disabled>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="">Куст/Месторождение/БУ:</label>
+            <input type="text" class="form-control" name="" placeholder="" value="{{order.bush}} {{order.oilfield}} ({{order.rig_type}} зав.№{{order.rig_num}})"
+                disabled>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="orderRequest">Заявка:</label>
+            <input type="text" class="form-control" name="orderRequest" placeholder="Request" value="{{order.orderRequest}}"
+                disabled>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="orderQuantity">Кол-во:</label>
+            <input type="text" class="form-control" name="orderQuantity" placeholder="Quantity" value="{{order.orderQuantity}}"
+                disabled>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="orderUnit">Ед.изм:</label>
+            <input type="text" class="form-control" name="orderUnit" placeholder="Unit" value="{{order.orderUnit}}"
+                disabled>
+        </div>
+
+        <div class="form-inline form-inline-custom">
+            <label for="curator">Куратор:</label>
+            <input type="text" class="form-control" name="curator" placeholder="" value="{{order.curator}}" disabled>
+        </div>
+        <div class="form-inline form-inline-custom">
+            <label for="shop">Цех / Участок:</label>
+            <input type="text" class="form-control" name="shop" placeholder="" value="{{order.shop}}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="messages">Сообщения:</label>
+            {{#each messages}}
+            <div class="media p-3">
+                <div class="media-body">
+                    <p><i>Сохранено {{messageTimeStamp}}</i> пользователем {{user}}</p>
+                    <p>{{message}}</p>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <div class="form-group">
+            <label for="statusHistory">История:</label>
+            {{#each statusHistory}}
+            <div class="media p-3">
+                <div class="media-body">
+                    <p><i>Сохранено {{statusTimeStamp}}</i> пользователем {{user}}</p>
+                    <p>Статус заявки : {{orderStatus}}</p>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+    </form>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete The Order?</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Do you realy want to delete the order?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <a class="btn btn-warning" href="/orders/delete?id={{order._id}}">Delete</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+{{#if userDescription}}
+{{!-- Manager View --}}
+{{#if_eq userRole "Manager"}}
+{{#if_notEq orderStatus "Close"}}
+<ul class="nav nav-menu-custom">
+    <li class="nav-item">
+        <a class="btn btn-primary nav-link" href="/orders/update?id={{order._id}}">Update The Order</a>
+    </li>
+</ul>
+{{/if_notEq}}
+{{/if_eq}}
+
+{{!-- Shop View --}}
+{{#if_eq userOrgUnity order.shop}}
+{{#if_notEq orderStatus "Close"}}
+<ul class="nav nav-menu-custom">
+    <li class="nav-item">
+        <a class="btn btn-primary nav-link" href="/orders/update?id={{order._id}}">Update The Order</a>
+    </li>
+</ul>
+{{/if_notEq}}
+{{/if_eq}}
+
+{{!-- Brigada View --}}
+{{#if_eq userDescription order.user}}
+<ul class="nav nav-menu-custom">
+    <li class="nav-item">
+        <a class="btn btn-primary nav-link" href="/orders/update?id={{order._id}}">Update The Order</a>
+    </li>
+</ul>
+{{/if_eq}}
+
+{{!-- Admin view --}}
+{{#if_eq userRole "admin"}}
+<ul class="nav nav-menu-custom">
+    <li class="nav-item">
+        <a class="btn btn-primary nav-link" href="/orders/update?id={{order._id}}">Update The Order</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="" data-toggle="modal" data-target="#deleteModal">Delete The Order</a>
+    </li>
+</ul>
+{{/if_eq}}
+{{/if}}
